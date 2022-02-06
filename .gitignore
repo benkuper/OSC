@@ -1,7 +1,2 @@
 .DS_Store
 examples/
-*.md
-library.json
-library.properties
-LICENSE
-keywords.txt
