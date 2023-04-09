@@ -1,5 +1,7 @@
 # OSC for Arduino
 
+This is a fork of the original CNMAT repo that works with PlatformIO and ESP32. I made a PR to the original repo but it has not changed for years, hence this fork. 
+
 This is an Arduino and Teensy library implementation of the [OSC](http://opensoundcontrol.org) (Open Sound Control) encoding.It was developed primarily by Yotam Mann and Adrian Freed at CNMAT where OSC was invented. It benefits from contributions from John MacCallum, Matt Wright, Jeff Lubow and Andy Schmeder and many beta testers.
 
 Features: 
