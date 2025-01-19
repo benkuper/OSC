@@ -49,67 +49,72 @@
 #define ESPxx
 #endif
 
-//ERRORS/////////////////////////////////////////////////
-typedef enum { OSC_OK = 0,
-	BUFFER_FULL, INVALID_OSC, ALLOCFAILED, INDEX_OUT_OF_BOUNDS
+// ERRORS/////////////////////////////////////////////////
+typedef enum
+{
+    OSC_OK = 0,
+    BUFFER_FULL,
+    INVALID_OSC,
+    ALLOCFAILED,
+    INDEX_OUT_OF_BOUNDS
 } OSCErrorCode;
 
 class OSCData
 {
 
 private:
+    // friends
+    friend class OSCMessage;
 
-    //friends
-	friend class OSCMessage;
-
-    //should only be used while decoding
-    //leaves an invalid OSCMessage with a type, but no data
+    // should only be used while decoding
+    // leaves an invalid OSCMessage with a type, but no data
     OSCData(char t);
 
 public:
+    // an error flag
+    OSCErrorCode error;
 
-	//an error flag
-	OSCErrorCode error;
+    // the size (in bytes) of the data
+    int bytes;
 
-	//the size (in bytes) of the data
-	int bytes;
+    // the type of the data
+    int type;
 
-	//the type of the data
-	int type;
-
-	//the data
-	union {
-		char * s; //string
-		int32_t i; //int
-		float f; //float
-		double d; //double
-        uint64_t l; //long
-		uint8_t * b; //blob
+    // the data
+    union
+    {
+        char *s;    // string
+        int32_t i;  // int
+        float f;    // float
+        double d;   // double
+        uint64_t l; // long
+        uint8_t *b; // blob
         osctime_t time;
-	} data;
+    } data;
 
-	//overload the constructor to account for all the types and sizes
-	OSCData(const char * s);
+    // overload the constructor to account for all the types and sizes
+    OSCData(const char *s);
 #if defined(__SAM3X8E__)
-	OSCData (int16_t);
+    OSCData(int16_t);
 #endif
-	OSCData (int32_t);
+    OSCData(int32_t);
 #ifndef ESPxx
-    OSCData (int);
+    OSCData(int);
 #endif
-    OSCData (unsigned int);
-	OSCData (float);
-	OSCData (double);
-	OSCData (uint8_t *, int);
-    //accepts another OSCData objects and clones it
-	OSCData (OSCData *);
-    OSCData  (boolean);
-    OSCData  (osctime_t);
+    OSCData(unsigned int);
+    OSCData(float);
+    OSCData(double);
+    OSCData(uint8_t *, int);
+    // accepts another OSCData objects and clones it
+    OSCData(OSCData *);
+    OSCData(boolean);
+    OSCData(osctime_t);
+    OSCData(uint32_t color);
 
-	//destructor
-	~OSCData();
+    // destructor
+    ~OSCData();
 
-    //GETTERS
+    // GETTERS
     int32_t getInt();
     float getFloat();
     double getDouble();
@@ -118,16 +123,16 @@ public:
     int getString(char *, int, int, int);
     int getBlob(uint8_t *);
     int getBlob(uint8_t *, int);
-    int getBlob(uint8_t *, int, int, int); 
+    int getBlob(uint8_t *, int, int, int);
     int getBlobLength();
     bool getBoolean();
     osctime_t getTime();
+    uint32_t getColor();
 
-    //constructor from byte array with type and length
-	OSCData(char, uint8_t *, int);
-    //fill the passed in buffer with the data
-	//uint8_t * asByteArray();
-
+    // constructor from byte array with type and length
+    OSCData(char, uint8_t *, int);
+    // fill the passed in buffer with the data
+    // uint8_t * asByteArray();
 };
 
 /*
@@ -136,17 +141,19 @@ public:
  if the system is little endian, it will flip the bits
  if the system is big endian, it'll do nothing
  */
-template<typename T>
-static inline T BigEndian(const T& x)
+template <typename T>
+static inline T BigEndian(const T &x)
 {
     const int one = 1;
-    const char sig = *(char*)&one;
-    if (sig == 0) return x; // for big endian machine just return the input
+    const char sig = *(char *)&one;
+    if (sig == 0)
+        return x; // for big endian machine just return the input
     T ret;
     int size = sizeof(T);
-    char* src = (char*)&x + sizeof(T) - 1;
-    char* dst = (char*)&ret;
-    while (size-- > 0){
+    char *src = (char *)&x + sizeof(T) - 1;
+    char *dst = (char *)&ret;
+    while (size-- > 0)
+    {
         *dst++ = *src--;
     }
     return ret;

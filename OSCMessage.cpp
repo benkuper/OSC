@@ -136,6 +136,20 @@ int32_t OSCMessage::getInt(int position){
         #endif
     }
 }
+
+uint32_t OSCMessage::getColor(int position){
+    OSCData * datum = getOSCData(position);
+    if (!hasError()){
+        return datum->getColor();
+    } else {
+        #ifndef ESPxx
+            return (int32_t)NULL;
+        #else
+            return -1;
+        #endif
+    }
+}
+
 osctime_t OSCMessage::getTime(int position){
 	OSCData * datum = getOSCData(position);
 	if (!hasError()){
@@ -347,6 +361,10 @@ bool OSCMessage::isDouble(int position){
 }
 bool OSCMessage::isBoolean(int position){
 	return testType(position, 'T') || testType(position, 'F');
+}
+
+bool OSCMessage::isColor(int position){
+    return testType(position, 'r');
 }
 
 
@@ -657,6 +675,20 @@ void OSCMessage::decodeData(uint8_t incomingByte){
                         u.t.seconds = BigEndian(u.t.seconds);
                         u.t.fractionofseconds = BigEndian(u.t.fractionofseconds);
                         set(i, u.t);
+                        clearIncomingBuffer();
+                    }
+                    break;
+
+                case 'r':
+                    if (incomingBufferSize == 4){
+                        //parse the buffer as an int
+                        union {
+                            int32_t i;
+                            uint8_t b[4];
+                        } u;
+                        memcpy(u.b, incomingBuffer, 4);
+                        int32_t dataVal = BigEndian(u.i);
+                        set(i, dataVal);
                         clearIncomingBuffer();
                     }
                     break;

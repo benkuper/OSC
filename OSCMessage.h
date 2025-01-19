@@ -258,6 +258,7 @@ public:
 	//offset and size can be defined in order to only query a part of the blob's content 
 	int getBlob(int, uint8_t *, int, int, int);
 
+	uint32_t getColor(int);
 
 	// returns the length of blob 
   	uint32_t getBlobLength(int position);
@@ -289,6 +290,7 @@ public:
 	bool isDouble(int);
     bool isBoolean(int);
     bool isTime(int);
+	bool isColor(int);
 
 /*=============================================================================
 	PATTERN MATCHING
