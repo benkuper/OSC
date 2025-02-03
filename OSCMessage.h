@@ -178,7 +178,7 @@ public:
 
 	//sets the data at a position
 	template <typename T>
-	OSCMessage& set(int position, T datum){
+	OSCMessage& set(int position, T datum, char type = ' '){
 		if (position < dataCount){
 			//replace the OSCData with a new one
 			OSCData * oldDatum = getOSCData(position);
@@ -186,6 +186,7 @@ public:
 			delete oldDatum;
 			//make a new one
 			OSCData * newDatum = new OSCData(datum);
+			if(type != ' ') newDatum->type = type;
 			//test if there was an error
 			if (newDatum->error == ALLOCFAILED){
 				error = ALLOCFAILED;

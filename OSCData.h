@@ -109,7 +109,6 @@ public:
     OSCData(OSCData *);
     OSCData(boolean);
     OSCData(osctime_t);
-    OSCData(uint32_t color);
 
     // destructor
     ~OSCData();

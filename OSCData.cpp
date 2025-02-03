@@ -157,14 +157,6 @@ OSCData::OSCData(OSCData *datum)
     }
 }
 
-OSCData::OSCData(uint32_t color)
-{
-    error = OSC_OK;
-    type = 'r';
-    bytes = 4;
-    data.i = color;
-}
-
 // DESTRUCTOR
 OSCData::~OSCData()
 {
